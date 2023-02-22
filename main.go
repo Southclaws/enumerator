@@ -84,6 +84,96 @@ func run(path string) error {
 				)
 
 			f.Func().
+				Params(
+					jen.Id("r").Id(name),
+				).
+				Id("MarshalText").
+				Params().
+				Params(
+					jen.Id("[]byte"),
+					jen.Id("error"),
+				).
+				Block(
+					jen.Return(
+						jen.Id("[]byte").Call(jen.Id("r").Dot("v")),
+						jen.Nil(),
+					),
+				)
+
+			f.Func().
+				Params(
+					jen.Id("r").Op("*").Id(name),
+				).
+				Id("UnmarshalText").
+				Params(
+					jen.Id("in").Id("[]byte"),
+				).
+				Params(
+					jen.Id("error"),
+				).
+				Block(
+					jen.List(
+						jen.Id("s"),
+						jen.Id("err"),
+					).Op(":=").Id("New"+name).Call(jen.Id("string").Call(jen.Id("in"))),
+
+					jen.If(jen.Id("err").Op("!=").Nil()).Block(
+						jen.Return(jen.Id("err")),
+					),
+
+					jen.Id("*r").Op("=").Id("s"),
+
+					jen.Return(
+						jen.Nil(),
+					),
+				)
+
+			f.Func().
+				Params(
+					jen.Id("r").Id(name),
+				).
+				Id("Value").
+				Params().
+				Params(
+					jen.Qual("database/sql/driver", "Value"),
+					jen.Id("error"),
+				).
+				Block(
+					jen.Return(
+						jen.Id("r").Dot("v"),
+						jen.Nil(),
+					),
+				)
+
+			f.Func().
+				Params(
+					jen.Id("r").Op("*").Id(name),
+				).
+				Id("Scan").
+				Params(
+					jen.Id("in").Any(),
+				).
+				Params(
+					jen.Id("error"),
+				).
+				Block(
+					jen.List(
+						jen.Id("s"),
+						jen.Id("err"),
+					).Op(":=").Id("New"+name).Call(jen.Qual("fmt", "Sprint").Call(jen.Id("in"))),
+
+					jen.If(jen.Id("err").Op("!=").Nil()).Block(
+						jen.Return(jen.Id("err")),
+					),
+
+					jen.Id("*r").Op("=").Id("s"),
+
+					jen.Return(
+						jen.Nil(),
+					),
+				)
+
+			f.Func().
 				Id("New"+name).
 				Params(jen.Id("in").Id("string")).
 				Params(

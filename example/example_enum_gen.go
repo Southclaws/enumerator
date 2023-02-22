@@ -2,7 +2,10 @@
 
 package example
 
-import "fmt"
+import (
+	"database/sql/driver"
+	"fmt"
+)
 
 type Status struct {
 	v statusEnum
@@ -17,6 +20,28 @@ var (
 
 func (r Status) String() string {
 	return string(r.v)
+}
+func (r Status) MarshalText() ([]byte, error) {
+	return []byte(r.v), nil
+}
+func (r *Status) UnmarshalText(in []byte) error {
+	s, err := NewStatus(string(in))
+	if err != nil {
+		return err
+	}
+	*r = s
+	return nil
+}
+func (r Status) Value() (driver.Value, error) {
+	return r.v, nil
+}
+func (r *Status) Scan(in any) error {
+	s, err := NewStatus(fmt.Sprint(in))
+	if err != nil {
+		return err
+	}
+	*r = s
+	return nil
 }
 func NewStatus(in string) (Status, error) {
 	switch in {
