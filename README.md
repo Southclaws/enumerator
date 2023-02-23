@@ -2,6 +2,15 @@
 
 > Generate safe and validated enumerated types.
 
+This package generates **safe** enumerated values from simple constants. The
+generated values are structs with one unexported string field which prevents you
+from instantiating them with arbitrary values. This ensures that when you come
+across one of these types in your codebase, you can rest assured it is valid.
+
+More than a basic [stringer](https://pkg.go.dev/golang.org/x/tools/cmd/stringer)
+as it's designed to work with existing string constants instead of ints and iota
+and it generates the code to validate arbitrary input and output a typed value.
+
 ## TL;DR
 
 Simply add the go:generate line and suffix any enum string types with `Enum`:
@@ -129,5 +138,7 @@ func NewStatus(in string) (Status, error) {
     }
 }
 ```
+
+And satisfies the `MarshalText`, `UnmarshalText`, `Value` and `Scan` interfaces.
 
 And that's it! Super simple right now. Issues and pull requests welcome!
