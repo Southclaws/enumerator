@@ -4,17 +4,17 @@ package example
 
 import "fmt"
 
-type statusEnum string
+type projectStatusEnum string
 
 const (
-	success   statusEnum = "success"
-	failure   statusEnum = "failure"
-	inBetween statusEnum = "inbetween"
-	notSure   statusEnum = "notsure"
+	success   projectStatusEnum = "success"
+	failure   projectStatusEnum = "failure"
+	inBetween projectStatusEnum = "inbetween"
+	notSure   projectStatusEnum = "notsure"
 )
 
 func Hi(in string) {
-	status, err := NewStatus(in)
+	status, err := NewProjectStatus(in)
 	if err != nil {
 		panic(err)
 	}

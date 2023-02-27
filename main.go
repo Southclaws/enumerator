@@ -11,8 +11,6 @@ import (
 	"strings"
 
 	"github.com/dave/jennifer/jen"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
 )
 
 func main() {
@@ -35,10 +33,19 @@ func run(path string) error {
 		return err
 	}
 
-	title := cases.Title(language.English).String
+	if len(pkgs) == 0 {
+		return nil
+	}
+
+	title := func(s string) string {
+		return strings.ToUpper(s[:1]) + s[1:]
+	}
 
 	for _, pkg := range pkgs {
 		if strings.Contains(pkg.Name, "_test") {
+			continue
+		}
+		if len(pkg.Files) == 0 {
 			continue
 		}
 
@@ -51,6 +58,10 @@ func run(path string) error {
 			for k, v := range m {
 				enums[k] = v
 			}
+		}
+
+		if len(enums) == 0 {
+			continue
 		}
 
 		f := jen.NewFile(pkg.Name)

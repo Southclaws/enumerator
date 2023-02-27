@@ -7,53 +7,53 @@ import (
 	"fmt"
 )
 
-type Status struct {
-	v statusEnum
+type ProjectStatus struct {
+	v projectStatusEnum
 }
 
 var (
-	Success   = Status{success}
-	Failure   = Status{failure}
-	Inbetween = Status{inBetween}
-	Notsure   = Status{notSure}
+	Success   = ProjectStatus{success}
+	Failure   = ProjectStatus{failure}
+	InBetween = ProjectStatus{inBetween}
+	NotSure   = ProjectStatus{notSure}
 )
 
-func (r Status) String() string {
+func (r ProjectStatus) String() string {
 	return string(r.v)
 }
-func (r Status) MarshalText() ([]byte, error) {
+func (r ProjectStatus) MarshalText() ([]byte, error) {
 	return []byte(r.v), nil
 }
-func (r *Status) UnmarshalText(in []byte) error {
-	s, err := NewStatus(string(in))
+func (r *ProjectStatus) UnmarshalText(in []byte) error {
+	s, err := NewProjectStatus(string(in))
 	if err != nil {
 		return err
 	}
 	*r = s
 	return nil
 }
-func (r Status) Value() (driver.Value, error) {
+func (r ProjectStatus) Value() (driver.Value, error) {
 	return r.v, nil
 }
-func (r *Status) Scan(in any) error {
-	s, err := NewStatus(fmt.Sprint(in))
+func (r *ProjectStatus) Scan(in any) error {
+	s, err := NewProjectStatus(fmt.Sprint(in))
 	if err != nil {
 		return err
 	}
 	*r = s
 	return nil
 }
-func NewStatus(in string) (Status, error) {
+func NewProjectStatus(in string) (ProjectStatus, error) {
 	switch in {
 	case "success":
 		return Success, nil
 	case "failure":
 		return Failure, nil
 	case "inBetween":
-		return Inbetween, nil
+		return InBetween, nil
 	case "notSure":
-		return Notsure, nil
+		return NotSure, nil
 	default:
-		return Status{}, fmt.Errorf("invalid value for type 'Status': '%s'", in)
+		return ProjectStatus{}, fmt.Errorf("invalid value for type 'ProjectStatus': '%s'", in)
 	}
 }
