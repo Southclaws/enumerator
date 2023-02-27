@@ -38,6 +38,10 @@ func run(path string) error {
 	title := cases.Title(language.English).String
 
 	for _, pkg := range pkgs {
+		if strings.Contains(pkg.Name, "_test") {
+			continue
+		}
+
 		enums := make(map[string][]string)
 
 		output := filepath.Join(path, fmt.Sprintf("%s_enum_gen.go", pkg.Name))
