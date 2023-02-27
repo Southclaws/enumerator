@@ -198,7 +198,7 @@ func run(path string) error {
 				Block(
 					jen.Switch(jen.Id("in")).BlockFunc(func(g *jen.Group) {
 						for _, v := range values {
-							g.Case(jen.Lit(v)).Block(
+							g.Case(jen.Id("string").Call(jen.Id(v))).Block(
 								jen.Return(jen.Id(title(v)), jen.Nil()),
 							)
 						}

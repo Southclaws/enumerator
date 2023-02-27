@@ -45,13 +45,13 @@ func (r *ProjectStatus) Scan(in any) error {
 }
 func NewProjectStatus(in string) (ProjectStatus, error) {
 	switch in {
-	case "success":
+	case string(success):
 		return Success, nil
-	case "failure":
+	case string(failure):
 		return Failure, nil
-	case "inBetween":
+	case string(inBetween):
 		return InBetween, nil
-	case "notSure":
+	case string(notSure):
 		return NotSure, nil
 	default:
 		return ProjectStatus{}, fmt.Errorf("invalid value for type 'ProjectStatus': '%s'", in)
