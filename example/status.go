@@ -13,6 +13,14 @@ const (
 	notSure   projectStatusEnum = "notsure"
 )
 
+type secondStatusEnum string
+
+const (
+	firstValue  secondStatusEnum = "first"
+	secondValue secondStatusEnum = "second"
+	thirdValue  secondStatusEnum = "third"
+)
+
 func Hi(in string) {
 	status, err := NewProjectStatus(in)
 	if err != nil {
