@@ -57,3 +57,51 @@ func NewProjectStatus(in string) (ProjectStatus, error) {
 		return ProjectStatus{}, fmt.Errorf("invalid value for type 'ProjectStatus': '%s'", in)
 	}
 }
+
+type SecondStatus struct {
+	v secondStatusEnum
+}
+
+var (
+	FirstValue  = SecondStatus{firstValue}
+	SecondValue = SecondStatus{secondValue}
+	ThirdValue  = SecondStatus{thirdValue}
+)
+
+func (r SecondStatus) String() string {
+	return string(r.v)
+}
+func (r SecondStatus) MarshalText() ([]byte, error) {
+	return []byte(r.v), nil
+}
+func (r *SecondStatus) UnmarshalText(in []byte) error {
+	s, err := NewSecondStatus(string(in))
+	if err != nil {
+		return err
+	}
+	*r = s
+	return nil
+}
+func (r SecondStatus) Value() (driver.Value, error) {
+	return r.v, nil
+}
+func (r *SecondStatus) Scan(in any) error {
+	s, err := NewSecondStatus(fmt.Sprint(in))
+	if err != nil {
+		return err
+	}
+	*r = s
+	return nil
+}
+func NewSecondStatus(in string) (SecondStatus, error) {
+	switch in {
+	case string(firstValue):
+		return FirstValue, nil
+	case string(secondValue):
+		return SecondValue, nil
+	case string(thirdValue):
+		return ThirdValue, nil
+	default:
+		return SecondStatus{}, fmt.Errorf("invalid value for type 'SecondStatus': '%s'", in)
+	}
+}
