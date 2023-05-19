@@ -26,6 +26,8 @@ func main() {
 	}
 }
 
+type value struct{ token, pretty string }
+
 func run(path string) error {
 	fs := token.NewFileSet()
 
@@ -50,7 +52,7 @@ func run(path string) error {
 			continue
 		}
 
-		enums := make(map[string][]string)
+		enums := make(map[string][]value)
 
 		output := filepath.Join(path, fmt.Sprintf("%s_enum_gen.go", pkg.Name))
 
@@ -88,10 +90,10 @@ func run(path string) error {
 			f.Var().
 				DefsFunc(func(g *jen.Group) {
 					for _, v := range values {
-						g.Id(title(v)).
+						g.Id(title(v.token)).
 							Op("=").
 							Id(name).
-							Values(jen.Id(v))
+							Values(jen.Id(v.token))
 					}
 				})
 
@@ -100,6 +102,34 @@ func run(path string) error {
 					jen.Id("r").Id(name),
 				).
 				Id("String").
+				Params().
+				String().
+				Block(
+					jen.Switch(jen.Id("r")).BlockFunc(func(g *jen.Group) {
+						for _, v := range values {
+							var ret *jen.Statement
+							if v.pretty == "" {
+								ret = jen.Lit(v.token)
+							} else {
+								ret = jen.Lit(v.pretty)
+							}
+
+							g.Case(jen.Id(title(v.token))).Block(
+								jen.Return(ret),
+							)
+						}
+
+						g.Default().Block(jen.Return(
+							jen.Lit(""),
+						))
+					}),
+				)
+
+			f.Func().
+				Params(
+					jen.Id("r").Id(name),
+				).
+				Id("GoString").
 				Params().
 				String().
 				Block(
@@ -206,8 +236,8 @@ func run(path string) error {
 				Block(
 					jen.Switch(jen.Id("in")).BlockFunc(func(g *jen.Group) {
 						for _, v := range values {
-							g.Case(jen.Id("string").Call(jen.Id(v))).Block(
-								jen.Return(jen.Id(title(v)), jen.Nil()),
+							g.Case(jen.Id("string").Call(jen.Id(v.token))).Block(
+								jen.Return(jen.Id(title(v.token)), jen.Nil()),
 							)
 						}
 
@@ -232,10 +262,10 @@ func run(path string) error {
 	return nil
 }
 
-func processFile(file *ast.File) map[string][]string {
+func processFile(file *ast.File) map[string][]value {
 	enumTypes := gatherEnumTypes(file)
 
-	types := make(map[string][]string)
+	types := make(map[string][]value)
 
 	for _, d := range file.Decls {
 		decl, ok := d.(*ast.GenDecl)
@@ -266,7 +296,17 @@ func processFile(file *ast.File) map[string][]string {
 
 			l := types[name]
 
-			l = append(l, v.Names[0].Name)
+			token := v.Names[0].Name
+
+			var pretty string
+			if v.Comment != nil {
+				pretty = strings.Trim(v.Comment.Text(), "\n\t")
+			}
+
+			l = append(l, value{
+				token:  token,
+				pretty: pretty,
+			})
 
 			types[name] = l
 		}

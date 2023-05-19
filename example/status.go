@@ -7,10 +7,10 @@ import "fmt"
 type projectStatusEnum string
 
 const (
-	success   projectStatusEnum = "success"
-	failure   projectStatusEnum = "failure"
-	inBetween projectStatusEnum = "inbetween"
-	notSure   projectStatusEnum = "notsure"
+	success   projectStatusEnum = "success"   // Success
+	failure   projectStatusEnum = "failure"   // Failure
+	inBetween projectStatusEnum = "inbetween" // In between
+	notSure   projectStatusEnum = "notsure"   // Not sure?
 )
 
 type secondStatusEnum string

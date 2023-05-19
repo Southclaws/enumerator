@@ -19,6 +19,20 @@ var (
 )
 
 func (r ProjectStatus) String() string {
+	switch r {
+	case Success:
+		return "Success"
+	case Failure:
+		return "Failure"
+	case InBetween:
+		return "In between"
+	case NotSure:
+		return "Not sure?"
+	default:
+		return ""
+	}
+}
+func (r ProjectStatus) GoString() string {
 	return string(r.v)
 }
 func (r ProjectStatus) MarshalText() ([]byte, error) {
@@ -69,6 +83,18 @@ var (
 )
 
 func (r SecondStatus) String() string {
+	switch r {
+	case FirstValue:
+		return "firstValue"
+	case SecondValue:
+		return "secondValue"
+	case ThirdValue:
+		return "thirdValue"
+	default:
+		return ""
+	}
+}
+func (r SecondStatus) GoString() string {
 	return string(r.v)
 }
 func (r SecondStatus) MarshalText() ([]byte, error) {
