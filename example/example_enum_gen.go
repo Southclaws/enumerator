@@ -85,11 +85,11 @@ var (
 func (r SecondStatus) String() string {
 	switch r {
 	case FirstValue:
-		return "firstValue"
+		return string(r.v)
 	case SecondValue:
-		return "secondValue"
+		return string(r.v)
 	case ThirdValue:
-		return "thirdValue"
+		return string(r.v)
 	default:
 		return ""
 	}

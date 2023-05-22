@@ -109,7 +109,7 @@ func run(path string) error {
 						for _, v := range values {
 							var ret *jen.Statement
 							if v.pretty == "" {
-								ret = jen.Lit(v.token)
+								ret = jen.Id("string").Call(jen.Id("r").Dot("v"))
 							} else {
 								ret = jen.Lit(v.pretty)
 							}
