@@ -18,21 +18,30 @@ var (
 	NotSure   = ProjectStatus{notSure}
 )
 
-func (r ProjectStatus) String() string {
-	switch r {
-	case Success:
-		return "Success"
-	case Failure:
-		return "Failure"
-	case InBetween:
-		return "In between"
-	case NotSure:
-		return "Not sure?"
+func (r ProjectStatus) Format(f fmt.State, verb rune) {
+	switch verb {
+	case 's':
+		fmt.Fprint(f, r.v)
+	case 'q':
+		fmt.Fprintf(f, "%q", r.String())
+	case 'v':
+		switch r {
+		case Success:
+			fmt.Fprint(f, "Success")
+		case Failure:
+			fmt.Fprint(f, "Failure")
+		case InBetween:
+			fmt.Fprint(f, "In between")
+		case NotSure:
+			fmt.Fprint(f, "Not sure?")
+		default:
+			fmt.Fprint(f, "")
+		}
 	default:
-		return ""
+		fmt.Fprint(f, r.v)
 	}
 }
-func (r ProjectStatus) GoString() string {
+func (r ProjectStatus) String() string {
 	return string(r.v)
 }
 func (r ProjectStatus) MarshalText() ([]byte, error) {
@@ -82,19 +91,17 @@ var (
 	ThirdValue  = SecondStatus{thirdValue}
 )
 
-func (r SecondStatus) String() string {
-	switch r {
-	case FirstValue:
-		return string(r.v)
-	case SecondValue:
-		return string(r.v)
-	case ThirdValue:
-		return string(r.v)
+func (r SecondStatus) Format(f fmt.State, verb rune) {
+	switch verb {
+	case 's':
+		fmt.Fprint(f, r.v)
+	case 'q':
+		fmt.Fprintf(f, "%q", r.String())
 	default:
-		return ""
+		fmt.Fprint(f, r.v)
 	}
 }
-func (r SecondStatus) GoString() string {
+func (r SecondStatus) String() string {
 	return string(r.v)
 }
 func (r SecondStatus) MarshalText() ([]byte, error) {

@@ -2,8 +2,6 @@ package example
 
 //go:generate go run -mod=mod github.com/Southclaws/enumerator
 
-import "fmt"
-
 type projectStatusEnum string
 
 const (
@@ -21,11 +19,11 @@ const (
 	thirdValue  secondStatusEnum = "third"
 )
 
-func Hi(in string) {
+func Status(in string) ProjectStatus {
 	status, err := NewProjectStatus(in)
 	if err != nil {
 		panic(err)
 	}
 
-	fmt.Println("Status is:", status.String())
+	return status
 }

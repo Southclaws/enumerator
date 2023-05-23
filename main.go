@@ -1,4 +1,3 @@
-//nolint:unused
 package main
 
 import (
@@ -101,27 +100,61 @@ func run(path string) error {
 				Params(
 					jen.Id("r").Id(name),
 				).
-				Id("String").
-				Params().
-				String().
+				Id("Format").
+				Params(
+					jen.Id("f").Qual("fmt", "State"),
+					jen.Id("verb").Id("rune"),
+				).
 				Block(
-					jen.Switch(jen.Id("r")).BlockFunc(func(g *jen.Group) {
+					jen.Switch(jen.Id("verb")).BlockFunc(func(g *jen.Group) {
+						hasPrettyValues := false
 						for _, v := range values {
-							var ret *jen.Statement
-							if v.pretty == "" {
-								ret = jen.Id("string").Call(jen.Id("r").Dot("v"))
-							} else {
-								ret = jen.Lit(v.pretty)
+							if v.pretty != "" {
+								hasPrettyValues = true
+								break
 							}
+						}
 
-							g.Case(jen.Id(title(v.token))).Block(
-								jen.Return(ret),
+						g.Case(jen.LitRune('s')).Block(
+							jen.Id("fmt").Dot("Fprint").Call(
+								jen.Id("f"), jen.Id("r").Dot("v"),
+							),
+						)
+
+						g.Case(jen.LitRune('q')).Block(
+							jen.Id("fmt").Dot("Fprintf").Call(
+								jen.Id("f"),
+								jen.Lit("%q"),
+								jen.Id("r").Dot("String").Call(),
+							),
+						)
+
+						if hasPrettyValues {
+							g.Case(jen.LitRune('v')).Block(
+								jen.Switch(jen.Id("r")).BlockFunc(func(g *jen.Group) {
+									for _, v := range values {
+										var val *jen.Statement
+										if v.pretty == "" {
+											val = jen.Id("string").Call(jen.Id("r").Dot("v"))
+										} else {
+											val = jen.Lit(v.pretty)
+										}
+
+										g.Case(jen.Id(title(v.token))).Block(
+											jen.Id("fmt").Dot("Fprint").Call(jen.Id("f"), val),
+										)
+									}
+
+									g.Default().Block(
+										jen.Id("fmt").Dot("Fprint").Call(jen.Id("f"), jen.Lit("")),
+									)
+								}),
 							)
 						}
 
-						g.Default().Block(jen.Return(
-							jen.Lit(""),
-						))
+						g.Default().Block(
+							jen.Id("fmt").Dot("Fprint").Call(jen.Id("f"), jen.Id("r").Dot("v")),
+						)
 					}),
 				)
 
@@ -129,7 +162,7 @@ func run(path string) error {
 				Params(
 					jen.Id("r").Id(name),
 				).
-				Id("GoString").
+				Id("String").
 				Params().
 				String().
 				Block(
