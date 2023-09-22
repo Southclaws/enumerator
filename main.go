@@ -320,7 +320,12 @@ func processFile(file *ast.File) map[string][]value {
 				continue
 			}
 
-			name := v.Type.(*ast.Ident).Name
+			ident, ok := v.Type.(*ast.Ident)
+			if !ok {
+				continue
+			}
+
+			name := ident.Name
 
 			_, ok = enumTypes[name]
 			if !ok {
