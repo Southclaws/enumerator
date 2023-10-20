@@ -47,8 +47,8 @@ func (r ProjectStatus) String() string {
 func (r ProjectStatus) MarshalText() ([]byte, error) {
 	return []byte(r.v), nil
 }
-func (r *ProjectStatus) UnmarshalText(in []byte) error {
-	s, err := NewProjectStatus(string(in))
+func (r *ProjectStatus) UnmarshalText(__iNpUt__ []byte) error {
+	s, err := NewProjectStatus(string(__iNpUt__))
 	if err != nil {
 		return err
 	}
@@ -58,16 +58,16 @@ func (r *ProjectStatus) UnmarshalText(in []byte) error {
 func (r ProjectStatus) Value() (driver.Value, error) {
 	return r.v, nil
 }
-func (r *ProjectStatus) Scan(in any) error {
-	s, err := NewProjectStatus(fmt.Sprint(in))
+func (r *ProjectStatus) Scan(__iNpUt__ any) error {
+	s, err := NewProjectStatus(fmt.Sprint(__iNpUt__))
 	if err != nil {
 		return err
 	}
 	*r = s
 	return nil
 }
-func NewProjectStatus(in string) (ProjectStatus, error) {
-	switch in {
+func NewProjectStatus(__iNpUt__ string) (ProjectStatus, error) {
+	switch __iNpUt__ {
 	case string(success):
 		return Success, nil
 	case string(failure):
@@ -77,7 +77,7 @@ func NewProjectStatus(in string) (ProjectStatus, error) {
 	case string(notSure):
 		return NotSure, nil
 	default:
-		return ProjectStatus{}, fmt.Errorf("invalid value for type 'ProjectStatus': '%s'", in)
+		return ProjectStatus{}, fmt.Errorf("invalid value for type 'ProjectStatus': '%s'", __iNpUt__)
 	}
 }
 
@@ -107,8 +107,8 @@ func (r SecondStatus) String() string {
 func (r SecondStatus) MarshalText() ([]byte, error) {
 	return []byte(r.v), nil
 }
-func (r *SecondStatus) UnmarshalText(in []byte) error {
-	s, err := NewSecondStatus(string(in))
+func (r *SecondStatus) UnmarshalText(__iNpUt__ []byte) error {
+	s, err := NewSecondStatus(string(__iNpUt__))
 	if err != nil {
 		return err
 	}
@@ -118,16 +118,16 @@ func (r *SecondStatus) UnmarshalText(in []byte) error {
 func (r SecondStatus) Value() (driver.Value, error) {
 	return r.v, nil
 }
-func (r *SecondStatus) Scan(in any) error {
-	s, err := NewSecondStatus(fmt.Sprint(in))
+func (r *SecondStatus) Scan(__iNpUt__ any) error {
+	s, err := NewSecondStatus(fmt.Sprint(__iNpUt__))
 	if err != nil {
 		return err
 	}
 	*r = s
 	return nil
 }
-func NewSecondStatus(in string) (SecondStatus, error) {
-	switch in {
+func NewSecondStatus(__iNpUt__ string) (SecondStatus, error) {
+	switch __iNpUt__ {
 	case string(firstValue):
 		return FirstValue, nil
 	case string(secondValue):
@@ -135,6 +135,6 @@ func NewSecondStatus(in string) (SecondStatus, error) {
 	case string(thirdValue):
 		return ThirdValue, nil
 	default:
-		return SecondStatus{}, fmt.Errorf("invalid value for type 'SecondStatus': '%s'", in)
+		return SecondStatus{}, fmt.Errorf("invalid value for type 'SecondStatus': '%s'", __iNpUt__)
 	}
 }

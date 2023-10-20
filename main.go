@@ -192,7 +192,7 @@ func run(path string) error {
 				).
 				Id("UnmarshalText").
 				Params(
-					jen.Id("in").Id("[]byte"),
+					jen.Id("__iNpUt__").Id("[]byte"),
 				).
 				Params(
 					jen.Id("error"),
@@ -201,7 +201,7 @@ func run(path string) error {
 					jen.List(
 						jen.Id("s"),
 						jen.Id("err"),
-					).Op(":=").Id("New"+name).Call(jen.Id("string").Call(jen.Id("in"))),
+					).Op(":=").Id("New"+name).Call(jen.Id("string").Call(jen.Id("__iNpUt__"))),
 
 					jen.If(jen.Id("err").Op("!=").Nil()).Block(
 						jen.Return(jen.Id("err")),
@@ -237,7 +237,7 @@ func run(path string) error {
 				).
 				Id("Scan").
 				Params(
-					jen.Id("in").Any(),
+					jen.Id("__iNpUt__").Any(),
 				).
 				Params(
 					jen.Id("error"),
@@ -246,7 +246,7 @@ func run(path string) error {
 					jen.List(
 						jen.Id("s"),
 						jen.Id("err"),
-					).Op(":=").Id("New"+name).Call(jen.Qual("fmt", "Sprint").Call(jen.Id("in"))),
+					).Op(":=").Id("New"+name).Call(jen.Qual("fmt", "Sprint").Call(jen.Id("__iNpUt__"))),
 
 					jen.If(jen.Id("err").Op("!=").Nil()).Block(
 						jen.Return(jen.Id("err")),
@@ -261,13 +261,13 @@ func run(path string) error {
 
 			f.Func().
 				Id("New"+name).
-				Params(jen.Id("in").Id("string")).
+				Params(jen.Id("__iNpUt__").Id("string")).
 				Params(
 					jen.Id(name),
 					jen.Id("error"),
 				).
 				Block(
-					jen.Switch(jen.Id("in")).BlockFunc(func(g *jen.Group) {
+					jen.Switch(jen.Id("__iNpUt__")).BlockFunc(func(g *jen.Group) {
 						for _, v := range values {
 							g.Case(jen.Id("string").Call(jen.Id(v.token))).Block(
 								jen.Return(jen.Id(title(v.token)), jen.Nil()),
@@ -280,7 +280,7 @@ func run(path string) error {
 
 							jen.Qual("fmt", "Errorf").Call(
 								jen.Lit(errorMessage),
-								jen.Id("in"),
+								jen.Id("__iNpUt__"),
 							),
 						))
 					}),
