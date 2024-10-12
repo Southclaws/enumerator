@@ -69,7 +69,7 @@ func run(path string) error {
 		es := []generate.Enum{}
 		for _, sourceName := range enumNames {
 			values := enums[sourceName]
-			name := generate.Title(strings.TrimSuffix(sourceName, "Enum"))
+			name := title(strings.TrimSuffix(sourceName, "Enum"))
 
 			es = append(es, generate.Enum{
 				Name:       name,
@@ -83,7 +83,7 @@ func run(path string) error {
 			return err
 		}
 
-		err = generate.Generate(output, pkg.Name, es, of)
+		err = generate.Generate(pkg.Name, es, of)
 		if err != nil {
 			return err
 		}
@@ -139,7 +139,8 @@ func processFile(file *ast.File) map[string][]generate.Value {
 			}
 
 			l = append(l, generate.Value{
-				Token:  token,
+				Symbol: title(token),
+				Value:  token,
 				Pretty: pretty,
 			})
 
@@ -181,4 +182,8 @@ func gatherEnumTypes(file *ast.File) map[string]*ast.TypeSpec {
 	}
 
 	return types
+}
+
+func title(s string) string {
+	return strings.ToUpper(s[:1]) + s[1:]
 }
